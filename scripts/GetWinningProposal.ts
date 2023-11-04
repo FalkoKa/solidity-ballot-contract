@@ -22,7 +22,8 @@ async function main() {
   const ballotFactory = new Ballot__factory(wallet);
   const ballotContract = ballotFactory.attach(contractAddress) as Ballot;
   const winner = await ballotContract.winnerName();
-  console.log(`The winning Proposal is ${winner}`);
+  const winnerName = ethers.decodeBytes32String(winner);
+  console.log(`The winning Proposal is ${winnerName}`);
 }
 
 main().catch((error) => {
