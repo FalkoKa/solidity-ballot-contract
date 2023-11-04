@@ -27,8 +27,7 @@ async function main() {
     const tx = await ballotContract.giveRightToVote(newVotingAddress);
     await tx.wait();
     const voter = await ballotContract.voters(newVotingAddress);
-    // transaction is working, but the if else statement does not work correctly
-    console.log('weight', voter.weight);
+
     if (voter.weight) {
       console.log('Address has right to vote now');
     } else {
