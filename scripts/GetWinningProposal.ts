@@ -6,10 +6,9 @@ dotenv.config();
 async function main() {
   // Receiving parameters
   const parameters = process.argv.slice(2);
-  if (!parameters || parameters.length < 2)
+  if (!parameters || parameters.length < 1)
     throw new Error('Parameters not provided');
   const contractAddress = parameters[0];
-  const newVotingAddress = parameters[1];
 
   // Configuring the provider
   const provider = new ethers.JsonRpcProvider(
@@ -22,21 +21,8 @@ async function main() {
   // Attaching the smart contract using Typechain
   const ballotFactory = new Ballot__factory(wallet);
   const ballotContract = ballotFactory.attach(contractAddress) as Ballot;
-
-  try {
-    const tx = await ballotContract.giveRightToVote(newVotingAddress);
-    await tx.wait();
-    const voter = await ballotContract.voters(newVotingAddress);
-    // transaction is working, but the if else statement does not work correctly
-    console.log('weight', voter.weight);
-    if (voter.weight) {
-      console.log('Address has right to vote now');
-    } else {
-      throw new Error('Something went wrong!');
-    }
-  } catch (error: any) {
-    console.log(error.message);
-  }
+  const winner = await ballotContract.winnerName();
+  console.log(`The winning Proposal is ${winner}`);
 }
 
 main().catch((error) => {
